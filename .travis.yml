@@ -1,0 +1,24 @@
+sudo: required
+# super user level permission
+
+services:
+  - docker
+
+before_install:
+  - docker build -t denyshubh/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run denyshubh/docker-react yarn run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-2'
+  app: 'docker-react'
+  env: 'DockerReact-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-618263559832'
+  bucket_path: 'docker-react'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: '$AWS_SECRET_KEY'
